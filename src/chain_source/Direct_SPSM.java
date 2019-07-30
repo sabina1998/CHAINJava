@@ -18,7 +18,7 @@ import it.unitn.disi.smatch.SMatchException;
 import it.unitn.disi.smatch.data.mappings.IContextMapping;
 import it.unitn.disi.smatch.data.mappings.IMappingElement;
 import it.unitn.disi.smatch.data.trees.INode;
-
+import it.unitn.disi.smatch.filters.SPSMMappingFilter;
 //imports from CLI.java in s-match-utils package
 import it.unitn.disi.common.DISIException;
 import it.unitn.disi.smatch.data.mappings.IContextMapping;
@@ -26,6 +26,9 @@ import it.unitn.disi.smatch.data.trees.IBaseContext;
 import it.unitn.disi.smatch.data.trees.IContext;
 import it.unitn.disi.smatch.data.trees.INode;
 import it.unitn.disi.smatch.loaders.context.IContextLoader;
+import it.unitn.disi.smatch.matchers.structure.tree.spsm.ted.TreeEditDistance;
+import it.unitn.disi.smatch.matchers.structure.tree.spsm.ted.utils.impl.MatchedTreeNodeComparator;
+import it.unitn.disi.smatch.matchers.structure.tree.spsm.ted.utils.impl.WorstCaseDistanceConversion;
 import it.unitn.disi.smatch.oracles.wordnet.InMemoryWordNetBinaryArray;
 import it.unitn.disi.smatch.oracles.wordnet.WordNet;
 import it.unitn.disi.smatch.renderers.context.IContextRenderer;
@@ -34,12 +37,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 
 /*
  * This class is responsible for initially taking in both the 
- * target and source schema before calling SPSM with these schemas
+ * target and source schema before calling SPSM directly with these schemas and not via a bash
+ * script like the Call_SPSM class does
  * it will then store the results as an ArrayList of Match_Struc objects
  * 
  * This class is tested in SPSM_Test_Cases.java & SPSM_Filter_Results_Test_Cases.java
@@ -55,6 +58,7 @@ public class Direct_SPSM{
             PropertyConfigurator.configure(log4jConf);
         }
     }
+	
     //default configuration
     public static final String DEFAULT_CONFIG_FILE_NAME = "/it/unitn/disi/smatch/s-match.xml";
 
@@ -189,14 +193,22 @@ public class Direct_SPSM{
 		
 	}
 	
-	/*makes call to SPSM through using .sh file
-	 * Match one source schema to one target schema
-	 *  May return multiple matches
-	 *  
-	 *  not used in this implementation of the system
-	 */
-	public ArrayList<Match_Struc> callSPSMOnce(ArrayList<Match_Struc> results, String currTarget){
-		// System.out.println("Calling SPSM");
+	/* calls spsm directly by using appropriate methods 
+	 * works the same way as with the bash script
+	 * 
+	 * this implementation works when the spsm packages have not been removed from the 
+	 * java build path as that way the code in them can be edited; in particular 
+	 * the directory paths located in spsm/s-match/conf: s-match-synchronous.xml
+	 * bean linguisticOracle; value was changed to include a full path
+	 * and in s-match-spsm-prolog package: PrologMappingRenderer.java 
+	 * FileOuputStream fOut inside the process() method has been changed to have a
+	 * slightly different path
+	 * 
+	 * these are the only changes made inside spsm
+	 * 
+	 * */
+	public ArrayList<Match_Struc> callSPSMDirectly(ArrayList<Match_Struc> results, String currTarget){
+		String configFile = null;
 		
 		//first clean the files
 		try {
@@ -205,48 +217,6 @@ public class Direct_SPSM{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		//call SPSM by executing the appropriate bash file
-		try {
-			spsmCallCounter++ ;
-			final ProcessBuilder pb = new ProcessBuilder("/bin/sh","call-spsm.sh");
-			pb.directory(new File("spsm/s-match/bin"));
-			
-			//start the process of executing file and wait for 
-			//it to finish before terminating the program
-			final Process p = pb.start();
-			p.waitFor();
-			
-			
-			results = readSerialisedResults(results,currTarget);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		// System.out.println("Call_SPSM.java: Reporting the match structures created by SPSM") ;
-		// System.out.println(results) ;
-	
-		return results ;
-		
-	}
-	
-	
-	/* calls spsm directly by using all the appropriate methods
-	 * 
-	 * this implementation works when the spsm packages have not been removed from the 
-	 * java build path as that way the code in them can be edited
-	 * 
-	 * */
-	public ArrayList<Match_Struc> callSPSMDirectly(ArrayList<Match_Struc> results, String currTarget){
-		String configFile = null;
-		
-		//first clean the files
-				try {
-					new PrintWriter("outputs/serialised-results.ser").close();
-					new PrintWriter("outputs/result-spsm.txt").close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
 		
 		/* These calls are the same as in the bash script file 
 		 * with the same inputs, outputs and config files used
@@ -339,7 +309,11 @@ public class Direct_SPSM{
             	 IContext ctxSource = (IContext) mm.loadContext(sourceFile);
                  IContext ctxTarget = (IContext) mm.loadContext(targetFile);
                  IContextMapping<INode> result = mm.online(ctxSource, ctxTarget);
-				mm.renderMapping(result, outputFile);
+                 
+                 //call to display matches and get user input
+                 displayMatches(result);
+                 
+				 mm.renderMapping(result, outputFile);
 			} catch (SMatchException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -362,8 +336,71 @@ public class Direct_SPSM{
 	            mm = MatchManager.getInstanceFromConfigFile(configFileName);
 	        }
 	        return mm;
-	    }
+	 }
 	
+	 /*
+     * this needs to be slightly changed so that it sends the mapping to the GUI
+     * and then the GUI displays it in the format 
+     * 
+     * source relation target   
+     * source relation target
+     * source relation target 
+     * 
+     * with a drop down option for each of them that allows the user to change the
+     * relation to what they want, from one of the following; !,<,>,=
+     * 
+     * instead of the current implementation which uses a scanner, console and a simple for loop
+     * to display and change the mappings
+     * 
+     * */
+    public void displayMatches(IContextMapping<INode> mapping){
+    	for(IMappingElement elm: mapping){
+			System.out.println(elm.getSource() + " " + elm.getRelation() + " " + elm.getTarget());
+		}
+    	System.out.println("Similarity Score: " + mapping.getSimilarity());
+    	System.out.println("Would you like to make changes to any of the mappings?");
+    	Scanner scanner = new Scanner(System.in);
+    	String edit = scanner.nextLine();
+		if(edit.equals("yes")){
+			makeChanges(mapping);
+		}
+    	
+    }
+    
+    /* This will also need to be slightly changed for the GUI as this will be what the
+     * drop down menu does (so there won't be a scanner but rather an if statement?)
+     *
+     **/
+    
+    public void makeChanges(IContextMapping<INode> mapping){
+    	Scanner scanner = new Scanner(System.in);
+    	for(IMappingElement elm: mapping){
+    		INode source = (INode) elm.getSource();
+    		INode target = (INode) elm.getTarget();
+    		char newRelation = scanner.next().charAt(0);
+			mapping.setRelation(source, target, newRelation);
+		}
+    	
+		double newSimilarity = recalculateSimilarity(mapping);
+    	mapping.setSimilarity(newSimilarity);
+    	displayMatches(mapping);
+    }
+    
+    /*duplicated method from the SPSMMappingFilter class
+     * this takes in the mapping and recalculates the similarity score
+     * by putting it through the tree edit distance algorithm
+     * */
+    
+    protected double recalculateSimilarity(IContextMapping<INode> mapping) {
+        MatchedTreeNodeComparator mntc = new MatchedTreeNodeComparator(mapping);
+        TreeEditDistance tde = new TreeEditDistance(mapping.getSourceContext(), mapping.getTargetContext(), mntc, new WorstCaseDistanceConversion());
+
+        tde.calculate();
+        double ed = tde.getTreeEditDistance();
+
+        return 1 - (ed / Math.max(mapping.getSourceContext().nodesCount(), mapping.getTargetContext().nodesCount()));
+    }
+   
 	
 	//then record the results from the .ser file returned from spsm
 	@SuppressWarnings("unchecked")

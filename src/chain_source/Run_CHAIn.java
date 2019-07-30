@@ -33,6 +33,7 @@ public class Run_CHAIn {
 	private static final int DATAREPAIREDWITHRESULTS = 12 ;
 
 	private Schema_From_Query getSchema = new Schema_From_Query();
+	//using the Direct_SPSM class rather than the Call_SPSM class for a direct call to SPSM
 	private Direct_SPSM spsm = new Direct_SPSM();
 	private Best_Match_Results filterRes = new Best_Match_Results();
 	private Repair_Schema repairSchema = new Repair_Schema();
