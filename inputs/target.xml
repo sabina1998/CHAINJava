@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?><context>
+  <node id="n0" preprocessed="true">
+    <name>automobile</name>
+    <label-formula>n0_0</label-formula>
+    <node-formula>n0_0</node-formula>
+    <tokens>
+      <token id="0">
+        <text>automobile</text>
+        <lemma>automobile</lemma>
+        <senses>
+          <sense id="n#2961779"/>
+          <sense id="v#1934709"/>
+        </senses>
+      </token>
+    </tokens>
+    <children>
+      <node id="n1" parent-id="n0" preprocessed="true">
+        <name>make</name>
+        <label-formula>n1_0</label-formula>
+        <node-formula>n1_0 &amp; n0_0</node-formula>
+        <tokens>
+          <token id="0">
+            <text>make</text>
+            <lemma>make</lemma>
+            <senses>
+              <sense id="n#5853667"/>
+              <sense id="n#341289"/>
+              <sense id="v#2566500"/>
+              <sense id="v#120124"/>
+              <sense id="v#1620211"/>
+              <sense id="v#772482"/>
+              <sense id="v#1649143"/>
+              <sense id="v#1624592"/>
+              <sense id="v#732743"/>
+              <sense id="v#1649617"/>
+              <sense id="v#1643749"/>
+              <sense id="v#2294200"/>
+              <sense id="v#1622033"/>
+              <sense id="v#2627475"/>
+              <sense id="v#2026014"/>
+              <sense id="v#2680519"/>
+              <sense id="v#1657416"/>
+              <sense id="v#1759660"/>
+              <sense id="v#1658171"/>
+              <sense id="v#557932"/>
+              <sense id="v#12260"/>
+              <sense id="v#2401858"/>
+              <sense id="v#2360592"/>
+              <sense id="v#2024442"/>
+              <sense id="v#667394"/>
+              <sense id="v#2589006"/>
+              <sense id="v#2604480"/>
+              <sense id="v#1737358"/>
+              <sense id="v#276867"/>
+              <sense id="v#2080104"/>
+              <sense id="v#73791"/>
+              <sense id="v#2754634"/>
+              <sense id="v#2754502"/>
+              <sense id="v#2751207"/>
+              <sense id="v#2671201"/>
+              <sense id="v#2627213"/>
+              <sense id="v#2138515"/>
+              <sense id="v#2054955"/>
+              <sense id="v#2025384"/>
+              <sense id="v#1759348"/>
+              <sense id="v#1668067"/>
+              <sense id="v#1431211"/>
+              <sense id="v#892559"/>
+              <sense id="v#840203"/>
+              <sense id="v#700022"/>
+              <sense id="v#699870"/>
+              <sense id="v#563259"/>
+              <sense id="v#563144"/>
+              <sense id="v#547033"/>
+              <sense id="v#107173"/>
+              <sense id="v#71765"/>
+            </senses>
+          </token>
+        </tokens>
+      </node>
+      <node id="n2" parent-id="n0" preprocessed="true">
+        <name>model</name>
+        <label-formula>n2_0</label-formula>
+        <node-formula>n2_0 &amp; n0_0</node-formula>
+        <tokens>
+          <token id="0">
+            <text>model</text>
+            <lemma>model</lemma>
+            <senses>
+              <sense id="n#5898856"/>
+              <sense id="n#5854179"/>
+              <sense id="n#10344226"/>
+              <sense id="n#3782816"/>
+              <sense id="n#5933998"/>
+              <sense id="n#10344517"/>
+              <sense id="n#5945830"/>
+              <sense id="n#10310901"/>
+              <sense id="n#900502"/>
+              <sense id="v#1747665"/>
+              <sense id="v#1700922"/>
+              <sense id="v#2147248"/>
+              <sense id="v#2147099"/>
+              <sense id="v#1726857"/>
+              <sense id="v#1701301"/>
+              <sense id="a#2596887"/>
+            </senses>
+          </token>
+        </tokens>
+      </node>
+      <node id="n3" parent-id="n0" preprocessed="true">
+        <name>year</name>
+        <label-formula>n3_0</label-formula>
+        <node-formula>n3_0 &amp; n0_0</node-formula>
+        <tokens>
+          <token id="0">
+            <text>year</text>
+            <lemma>year</lemma>
+            <senses>
+              <sense id="n#15228587"/>
+              <sense id="n#15229093"/>
+              <sense id="n#15226340"/>
+              <sense id="n#8255581"/>
+            </senses>
+          </token>
+        </tokens>
+      </node>
+      <node id="n4" parent-id="n0" preprocessed="true">
+        <name>serialNum</name>
+        <label-formula>n4_0</label-formula>
+        <node-formula>n4_0 &amp; n0_0</node-formula>
+        <tokens>
+          <token id="0">
+            <text>serialnum</text>
+            <lemma>serialnum</lemma>
+            <senses/>
+          </token>
+        </tokens>
+      </node>
+    </children>
+  </node>
+</context>

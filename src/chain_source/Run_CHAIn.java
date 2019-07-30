@@ -33,7 +33,7 @@ public class Run_CHAIn {
 	private static final int DATAREPAIREDWITHRESULTS = 12 ;
 
 	private Schema_From_Query getSchema = new Schema_From_Query();
-	private Call_SPSM spsm = new Call_SPSM();
+	private Direct_SPSM spsm = new Direct_SPSM();
 	private Best_Match_Results filterRes = new Best_Match_Results();
 	private Repair_Schema repairSchema = new Repair_Schema();
 	private Create_Query createQuery = new Create_Query();
