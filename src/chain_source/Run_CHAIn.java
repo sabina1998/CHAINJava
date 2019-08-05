@@ -6,8 +6,8 @@ import com.hp.hpl.jena.query.ResultSet;
 
 /* Author Tanya Howden
  * Date September 2017
- * Modified Diana Bental
- * Date December 2017
+ * Modified Sabina Jedrzejczyk
+ * Date August 2019
  */
 
 /*

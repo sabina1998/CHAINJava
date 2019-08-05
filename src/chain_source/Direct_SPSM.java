@@ -310,8 +310,9 @@ public class Direct_SPSM{
                  IContext ctxTarget = (IContext) mm.loadContext(targetFile);
                  IContextMapping<INode> result = mm.online(ctxSource, ctxTarget);
                  
-                 //call to display matches and get user input
-                 displayMatches(result);
+                 //call to display matches and get user input via the console in eclipse
+                 //this will change for the GUI
+                 //displayMatches(result);
                  
 				 mm.renderMapping(result, outputFile);
 			} catch (SMatchException e) {
