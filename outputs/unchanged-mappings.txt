@@ -1,6 +1,6 @@
 similarity(0.9).
-match([[car,make],=,[automobile,make]]).
 match([[car,serialNumber],<,[automobile,serialNum]]).
-match([[car,model],=,[automobile,model]]).
 match([[car,year],=,[automobile,year]]).
 match([[car],=,[automobile]]).
+match([[car,make],=,[automobile,make]]).
+match([[car,model],=,[automobile,model]]).

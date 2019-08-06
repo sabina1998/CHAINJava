@@ -68,6 +68,8 @@ public class Direct_SPSM{
 	
 	
 	private String[] targetList;
+	
+	private String originalQuery = "";
 	private static int spsmCallCounter = 0;
 	private static int spsmCrashCounter = 0;
 	private static int spsmSuccessCounter = 0;
@@ -88,8 +90,8 @@ public class Direct_SPSM{
 		String target = "automobile(make, model, year, serialNum)";
 		
 		
-		//source="author(name)";
-		//target="document(title,author) ; author(name,document) ; reviewAuthor(firstname,lastname,review)";
+		//String source="author(name)";
+		//String target="document(title,author) ; author(name,document) ; reviewAuthor(firstname,lastname,review)";
 		result = classInst.callSPSM(result,source,target);
 		
 		//then lets see if we can read the results from our new structure
@@ -121,6 +123,11 @@ public class Direct_SPSM{
 			
 			
 		}	
+	}
+	
+	
+	public String getOriginalQuery(){
+		return originalQuery;
 	}
 	
 	// Call SPSM on the source schema and one or more target schemas.
@@ -308,13 +315,16 @@ public class Direct_SPSM{
              try {
             	 IContext ctxSource = (IContext) mm.loadContext(sourceFile);
                  IContext ctxTarget = (IContext) mm.loadContext(targetFile);
-                 IContextMapping<INode> result = mm.online(ctxSource, ctxTarget);
+                 //original mappings not for changing
+                 IContextMapping<INode> unchangedResult = mm.online(ctxSource, ctxTarget);
+                 //original mappings used for user input
+                 IContextMapping<INode> userResult = mm.online(ctxSource, ctxTarget);
                  
-                 //call to display matches and get user input via the console in eclipse
-                 //this will change for the GUI
-                 //displayMatches(result);
+                 //call to display matches and get user input
+                // displayMatches(userResult);
                  
-				 mm.renderMapping(result, outputFile);
+                 mm.renderMapping(unchangedResult, "outputs/unchanged-mappings.txt");
+				 mm.renderMapping(userResult, outputFile);
 			} catch (SMatchException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -365,7 +375,6 @@ public class Direct_SPSM{
 		if(edit.equals("yes")){
 			makeChanges(mapping);
 		}
-    	
     }
     
     /* This will also need to be slightly changed for the GUI as this will be what the
