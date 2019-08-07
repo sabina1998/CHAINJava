@@ -203,16 +203,6 @@ public class Direct_SPSM{
 	/* calls spsm directly by using appropriate methods 
 	 * works the same way as with the bash script
 	 * 
-	 * this implementation works when the spsm packages have not been removed from the 
-	 * java build path as that way the code in them can be edited; in particular 
-	 * the directory paths located in spsm/s-match/conf: s-match-synchronous.xml
-	 * bean linguisticOracle; value was changed to include a full path
-	 * and in s-match-spsm-prolog package: PrologMappingRenderer.java 
-	 * FileOuputStream fOut inside the process() method has been changed to have a
-	 * slightly different path
-	 * 
-	 * these are the only changes made inside spsm
-	 * 
 	 * */
 	public ArrayList<Match_Struc> callSPSMDirectly(ArrayList<Match_Struc> results, String currTarget){
 		String configFile = null;
