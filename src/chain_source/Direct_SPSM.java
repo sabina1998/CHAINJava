@@ -68,8 +68,6 @@ public class Direct_SPSM{
 	
 	
 	private String[] targetList;
-	
-	private String originalQuery = "";
 	private static int spsmCallCounter = 0;
 	private static int spsmCrashCounter = 0;
 	private static int spsmSuccessCounter = 0;
@@ -123,11 +121,6 @@ public class Direct_SPSM{
 			
 			
 		}	
-	}
-	
-	
-	public String getOriginalQuery(){
-		return originalQuery;
 	}
 	
 	// Call SPSM on the source schema and one or more target schemas.
