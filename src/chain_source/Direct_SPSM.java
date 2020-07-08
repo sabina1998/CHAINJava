@@ -85,7 +85,7 @@ public class Direct_SPSM{
 //		String target = "vehicle(model,year,make)";
 		
 		String source = "car(make, model, year, serialNumber)";
-		String target = "automobile(make, model, year, serialNum)";
+		String target = "automobile(make, model, year, serialNumber)";
 		
 		
 		//String source="author(name)";
@@ -299,14 +299,14 @@ public class Direct_SPSM{
             	 IContext ctxSource = (IContext) mm.loadContext(sourceFile);
                  IContext ctxTarget = (IContext) mm.loadContext(targetFile);
                  //original mappings not for changing
-                 IContextMapping<INode> unchangedResult = mm.online(ctxSource, ctxTarget);
+                 //IContextMapping<INode> unchangedResult = mm.online(ctxSource, ctxTarget);
                  //original mappings used for user input
                  IContextMapping<INode> userResult = mm.online(ctxSource, ctxTarget);
                  
                  //call to display matches and get user input
-                // displayMatches(userResult);
+                //displayMatches(userResult);
                  
-                 mm.renderMapping(unchangedResult, "outputs/unchanged-mappings.txt");
+                 //mm.renderMapping(unchangedResult, "outputs/unchanged-mappings.txt");
 				 mm.renderMapping(userResult, outputFile);
 			} catch (SMatchException e) {
 				// TODO Auto-generated catch block
